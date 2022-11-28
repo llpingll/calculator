@@ -1,0 +1,93 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+    font-size: 20px;
+    font-family: 'Roboto', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: lightsteelblue;
+    padding-top: 10px;
+}
+
+.container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+
+.calculator {
+    border: 2px solid black;
+    border-radius: 20px;
+    max-width: 300px;
+    height: 420px;
+    display: grid;
+    grid-gap: 20px;
+    grid-template-rows: 1fr 3fr;
+    padding: 20px;
+    background-color: rgb(39, 39, 39);
+}
+
+.display {
+    border-radius: 10px;
+    background-color: deepskyblue;
+    max-height: 80px;
+}
+
+.display div {
+    /* border: 2px solid red; */
+    text-align: end;
+    padding: 10px;
+    min-height: 45px;
+}
+
+.result {
+    margin-top: -12px;
+    font-size: 25px;
+}
+
+.keyboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+}
+
+#clear, #equal{
+    grid-column: span 2;
+}
+
+button {
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 8px;
+    font-size: inherit;
+    background-color: deepskyblue;
+    border: 0;
+}
+
+button:hover {
+    background-color: rgb(0, 154, 206);
+}
+
+footer {
+    padding: 10px;
+    font-size: inherit;
+}
+
+.fa-github {
+    color: black;
+    font-size: 24px;
+    transition: transform 0.3s ease-in-out;
+}
+  
+.fa-github:hover {
+    transform: rotate(360deg) scale(1.2);
+}
