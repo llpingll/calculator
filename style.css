@@ -14,7 +14,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    background-color: lightsteelblue;
+    background-color: rgb(137, 172, 218);
     padding-top: 10px;
 }
 
