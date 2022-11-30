@@ -12,7 +12,6 @@ const sum = document.querySelector(".sum");
 buttons.forEach(button => {
     button.addEventListener("click", function(e) {
         display(e);
-        // console.log(e.target.class);
     });
 });
 
@@ -20,20 +19,82 @@ window.addEventListener('DOMContentLoaded', () => feedback.textContent = "0");
 
 
 // Functions
-function add(a, b) {
-    return a + b;
+
+function display(e) {
+    if (e.target.className === "number") {
+        handleNumbers(e);
+    }
+    else if (e.target.className === "operator") {
+        handleOperators(e);
+    }
+    else if (e.target.className === "dot") {
+        handleDot();
+    }
+    else if (e.target.className === "delete") {
+        handleDel();
+    }
+    else if (e.target.className === "clear") {
+        handleClear();
+    }
+    else if (e.target.className === "equal") {
+        handleEqual();
+    }
 }
 
-function subtract(a, b) {
-    return a - b;
+function handleNumbers(e) {
+    if (feedback.textContent === "0") {
+        feedback.textContent = e.target.textContent;
+        fbBuffer = e.target.textContent;
+    }
+    else if (isOperator === true) {
+        feedback.textContent = e.target.textContent;
+        fbBuffer = e.target.textContent;
+        isOperator = false;
+    }
+    else {
+        feedback.textContent += `${e.target.textContent}`;
+        fbBuffer += `${e.target.textContent}`;
+    }
 }
 
-function multiply(a, b) {
-    return a * b;
+function handleOperators(e) {  
+    sum.textContent = `${feedback.textContent} ${e.target.textContent}`;
+    sBuffer = `${feedback.textContent} ${e.target.textContent}`;
+    isOperator = true;    
 }
 
-function divide(a, b) {
-    return a / b;
+function handleDot() {
+    if (feedback.textContent.includes(".")) {
+        return;
+    }
+    feedback.textContent += ".";
+    fbBuffer += "."
+}
+
+function handleDel() {
+    if (feedback.textContent.length > 1) {
+        feedback.textContent = feedback.textContent.slice(0, feedback.length - 1);
+        fbBuffer = feedback.textContent;
+    }
+    feedback.textContent = "0";
+    fbBuffer = feedback.textContent;
+}
+
+function handleClear() {
+    sum.textContent = "";
+    feedback.textContent = "0";
+    sBuffer = 0;
+    fbBuffer = 0;
+}
+
+function handleEqual() {
+    isOperator = false;
+    if (!sBuffer.endsWith("=")) {
+        feedback.textContent = operate(sBuffer.split(" ")[1], Number(sBuffer.split(" ")[0]), Number(fbBuffer));
+        sum.textContent += ` ${fbBuffer} =`;
+        fbBuffer = feedback.textContent;
+        sBuffer += ` ${fbBuffer} =`;
+    } 
 }
 
 function operate(operator, a, b) {
@@ -51,61 +112,18 @@ function operate(operator, a, b) {
     }
 }
 
-function del(string) {
-    if (string.length > 1) {
-        return string.slice(0, string.length - 1);
-    }
-    return "0";
+function add(a, b) {
+    return a + b;
 }
 
-function clear() {
-    sum.textContent = "";
-    feedback.textContent = "0";
-    sBuffer = 0;
-    fbBuffer = 0;
+function subtract(a, b) {
+    return a - b;
 }
 
-function display(e) {
-    // Handle numbers
-    if (e.target.className === "number") {
-        if (feedback.textContent === "0") {
-            feedback.textContent = e.target.textContent;
-            fbBuffer = e.target.textContent;
-        }
-        else if (isOperator === true) {
-            feedback.textContent = e.target.textContent;
-            fbBuffer = e.target.textContent;
-            isOperator = false;
-        }
-        else {
-            feedback.textContent += `${e.target.textContent}`;
-            fbBuffer += `${e.target.textContent}`;
-        }
-    }
-    // Handle operators
-    else if (e.target.className === "operator") {
-        sum.textContent = `${feedback.textContent} ${e.target.textContent}`;
-        sBuffer = `${feedback.textContent} ${e.target.textContent}`;
-        isOperator = true;
-    }
-    // Handle the delete button
-    else if (e.target.className === "delete") {
-        feedback.textContent = del(feedback.textContent);
-        fbBuffer = feedback.textContent;
-    }
-    // Handle the clear button
-    else if (e.target.className === "clear") {
-        clear();
-    }
-    // Handle the equal button
-    else if (e.target.className === "equal") {
-        isOperator = false;
-        if (!sBuffer.endsWith("=")) {
-            feedback.textContent = operate(sBuffer.split(" ")[1], Number(sBuffer.split(" ")[0]), Number(fbBuffer));
-            fbBuffer = feedback.textContent;
-            sum.textContent += ` ${fbBuffer} =`;
-            sBuffer += ` ${fbBuffer} =`;
-        }
-        
-    }
+function multiply(a, b) {
+    return a * b;
+}
+
+function divide(a, b) {
+    return a / b;
 }
