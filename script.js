@@ -19,7 +19,6 @@ window.addEventListener('DOMContentLoaded', () => feedback.textContent = "0");
 
 
 // Functions
-
 function display(e) {
     if (e.target.className === "number") {
         handleNumbers(e);
@@ -57,10 +56,26 @@ function handleNumbers(e) {
     }
 }
 
-function handleOperators(e) {  
-    sum.textContent = `${feedback.textContent} ${e.target.textContent}`;
-    sBuffer = `${feedback.textContent} ${e.target.textContent}`;
-    isOperator = true;    
+function handleOperators(e) {
+    if (sum.textContent.endsWith("=")) {
+        sum.textContent = `${feedback.textContent} ${e.target.textContent}`;
+        sBuffer = `${feedback.textContent} ${e.target.textContent}`;
+        isOperator = true;
+    }
+    else if (["+", "-", "*", "÷"].some(char => sum.textContent.includes(char))) {
+        isOperator = false;
+        sum.textContent = operate(sBuffer.split(" ")[1], Number(sBuffer.split(" ")[0]), Number(fbBuffer));
+        sum.textContent += ` ${e.target.textContent}`;
+        fbBuffer = feedback.textContent;
+        sBuffer = `${sum.textContent} ${e.target.textContent}`;
+        feedback.textContent = "0";
+        isOperator = true;
+    }
+    else {
+        sum.textContent = `${feedback.textContent} ${e.target.textContent}`;
+        sBuffer = `${feedback.textContent} ${e.target.textContent}`;
+        isOperator = true;
+    }
 }
 
 function handleDot() {
@@ -73,11 +88,13 @@ function handleDot() {
 
 function handleDel() {
     if (feedback.textContent.length > 1) {
-        feedback.textContent = feedback.textContent.slice(0, feedback.length - 1);
+        feedback.textContent = feedback.textContent.slice(0, feedback.textContent.length - 1);
         fbBuffer = feedback.textContent;
     }
-    feedback.textContent = "0";
+    else {
+        feedback.textContent = "0";
     fbBuffer = feedback.textContent;
+    }
 }
 
 function handleClear() {
@@ -98,17 +115,18 @@ function handleEqual() {
 }
 
 function operate(operator, a, b) {
+    console.log(operator, a, b);
     if (operator === "+") {
         return add(a, b);
     }
     else if (operator === "-") {
         return subtract(a, b);
     }
-    else if (operator === "*") {
-        return multiply(a, b);
+    else if (operator === "÷") {
+        return divide(a, b);
     }
     else {
-        return divide(a, b);
+        return multiply(a, b);
     }
 }
 
