@@ -11,33 +11,20 @@ const sum = document.querySelector(".sum");
 // Events
 buttons.forEach(button => {
     button.addEventListener("click", function(e) {
-        display(e);
+        calculate(e);
     });
 });
 
 window.addEventListener('DOMContentLoaded', () => feedback.textContent = "0");
 
-
 // Functions
-function display(e) {
-    if (e.target.className === "number") {
-        handleNumbers(e);
-    }
-    else if (e.target.className === "operator") {
-        handleOperators(e);
-    }
-    else if (e.target.className === "dot") {
-        handleDot();
-    }
-    else if (e.target.className === "delete") {
-        handleDel();
-    }
-    else if (e.target.className === "clear") {
-        handleClear();
-    }
-    else if (e.target.className === "equal") {
-        handleEqual();
-    }
+function calculate(e) {
+    if (e.target.className === "number") handleNumbers(e);
+    else if (e.target.className === "operator") handleOperators(e);
+    else if (e.target.className === "dot") handleDot();
+    else if (e.target.className === "delete") handleDel();
+    else if (e.target.className === "clear") handleClear();
+    else if (e.target.className === "equal") handleEqual();
 }
 
 function handleNumbers(e) {
@@ -57,31 +44,32 @@ function handleNumbers(e) {
 }
 
 function handleOperators(e) {
+    isOperator = true;
     if (sum.textContent.endsWith("=")) {
         sum.textContent = `${feedback.textContent} ${e.target.textContent}`;
         sBuffer = `${feedback.textContent} ${e.target.textContent}`;
-        isOperator = true;
     }
     else if (["+", "-", "*", "÷"].some(char => sum.textContent.includes(char))) {
-        isOperator = false;
-        sum.textContent = operate(sBuffer.split(" ")[1], Number(sBuffer.split(" ")[0]), Number(fbBuffer));
-        sum.textContent += ` ${e.target.textContent}`;
-        fbBuffer = feedback.textContent;
-        sBuffer = `${sum.textContent} ${e.target.textContent}`;
-        feedback.textContent = "0";
-        isOperator = true;
+        if ((Number(fbBuffer) === 0) && (sBuffer.split(" ")[1] === "÷")) {
+            alert("You can't divide by 0 sweetheart 😘");
+            handleClear();
+        }
+        else {
+            sum.textContent = operate(sBuffer.split(" ")[1], Number(sBuffer.split(" ")[0]), Number(fbBuffer));
+            sum.textContent += ` ${e.target.textContent}`;
+            fbBuffer = feedback.textContent;
+            sBuffer = `${sum.textContent} ${e.target.textContent}`;
+            feedback.textContent = "0";
+        }
     }
     else {
         sum.textContent = `${feedback.textContent} ${e.target.textContent}`;
         sBuffer = `${feedback.textContent} ${e.target.textContent}`;
-        isOperator = true;
     }
 }
 
 function handleDot() {
-    if (feedback.textContent.includes(".")) {
-        return;
-    }
+    if (feedback.textContent.includes(".")) return;
     feedback.textContent += ".";
     fbBuffer += "."
 }
@@ -93,7 +81,7 @@ function handleDel() {
     }
     else {
         feedback.textContent = "0";
-    fbBuffer = feedback.textContent;
+        fbBuffer = feedback.textContent;
     }
 }
 
@@ -105,43 +93,24 @@ function handleClear() {
 }
 
 function handleEqual() {
-    isOperator = false;
-    if (!sBuffer.endsWith("=")) {
+    if (sum.textContent === "") {
+        return;
+    }
+    else if ((Number(fbBuffer) === 0) && (sBuffer.split(" ")[1] === "÷")) {
+        alert("You can't divide by 0 sweetheart 😘");
+        handleClear();
+    }
+    else if (!sBuffer.endsWith("=")) {
         feedback.textContent = operate(sBuffer.split(" ")[1], Number(sBuffer.split(" ")[0]), Number(fbBuffer));
         sum.textContent += ` ${fbBuffer} =`;
         fbBuffer = feedback.textContent;
         sBuffer += ` ${fbBuffer} =`;
-    } 
+    }
 }
 
 function operate(operator, a, b) {
-    console.log(operator, a, b);
-    if (operator === "+") {
-        return add(a, b);
-    }
-    else if (operator === "-") {
-        return subtract(a, b);
-    }
-    else if (operator === "÷") {
-        return divide(a, b);
-    }
-    else {
-        return multiply(a, b);
-    }
-}
-
-function add(a, b) {
-    return a + b;
-}
-
-function subtract(a, b) {
-    return a - b;
-}
-
-function multiply(a, b) {
-    return a * b;
-}
-
-function divide(a, b) {
-    return a / b;
+    if (operator === "+") return a + b;
+    else if (operator === "-") return a - b;
+    else if (operator === "÷") return a / b;
+    else return a * b;
 }
